@@ -734,20 +734,22 @@ $(document).ready(function(){
   $$(document).tap('#me', function(){window.open('http://mgingras.ca', '_blank');});
   $$(document).tap('#home', function(){location.reload();});
   $$('#songSearch').on('keyup', songSearch);
+
+
   //Websocket config
   var host = location.origin.replace(/^http/, 'ws');
   ws = new WebSocket(host);
   ws.onmessage = function(msg){
     msg = JSON.parse(msg.data);
-    console.log('ws msg:');
-    console.dir(msg);
+    // console.log('ws msg:');
+    // console.dir(msg);
     if(msg.party){
       myParty = msg.party;
       updateView(msg.party);
     }
-    // if(msg.id != undefined){
-    //   clientId = msg.id;
-    // }
+    if(msg.ping){
+      ws.send(JSON.stringify({pong:true}));
+    }
   }
 });
 

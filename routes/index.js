@@ -188,14 +188,27 @@ module.exports = function(app, wss){
     };
     var inParty = false; // Are they in a party and need to be taken out of...
     var id = clients.push(client) - 1;
+    var pong = true;
     client.id = id;
     console.log("client connection: " + id);
     ws.send(JSON.stringify({id:id}));
 
-    // ws.send(JSON.stringify(msg));
+    var interval = setInterval(function(){
+      if(!pong){
+        clearInterval(interval);
+        ws.close();
+        return;
+      }
+      ws.send(JSON.stringify({ping:true}));
+      pong = false;
+    }, 7500);
+
     ws.on('message', function(msg) {
       msg = JSON.parse(msg);
-      console.dir(msg);
+      // console.dir(msg);
+      if(msg.pong !== void 0){
+        pong = true;
+      }
       if(msg.joined !== void 0){
         console.dir(parties);
         clients[id].partyId = msg.joined;
@@ -204,6 +217,9 @@ module.exports = function(app, wss){
       }
     });
     ws.on('close', function() {
+      if(interval){
+        clearInterval(interval);
+      }
       // Take client out of party...
       if(inParty){
         var index = parties[clients[id].partyId].clients.indexOf(id);
