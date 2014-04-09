@@ -1,3 +1,30 @@
+// Schemas:
+// *Party:
+// {
+//  name: String,
+//  description: String,
+//  genre: String,
+//  id: int (auto increments),
+//  nowPlaying:song,
+//  songs: [song],
+//  guests: [Int(clientId)]
+// }
+//
+// *song:
+// {
+//  title: String,
+//  username: String,
+//  atwork: String,
+//  votes: Int
+// }
+//
+// *client
+// {
+//   ws_id: int,
+//   partyId: int,
+//   songsVotedFor: [song]
+// }
+//
 
 module.exports = function(app, wss){
   var http = require('http');
@@ -5,59 +32,8 @@ module.exports = function(app, wss){
 
 
   var ws_connections = []; // Array of ws_connections
-  var clients = [] // Array of client data
-  var partyId = 0;  // 2 becuase there are two predefined below...
-  var parties = [] // Arrat of parties
-  // [   // Array of parties going on...
-  //   {
-  //     name:'Martin\'s Party',
-  //     description:'We\'re listening to some sick fuckin music join up',
-  //     genre:'Dubstep',
-  //     id:0,
-  //     songs:[],
-  //     clients:[],
-  //     nowPlaying:undefined
-  //   },
-  //   {
-  //     name:'Sierra\'s Party',
-  //     description:'We\'re listening Rihanna, only Rihanna, ever...',
-  //     genre:'Pop',
-  //     id:1,
-  //     songs:[],
-  //     clients:[],
-  //     nowPlaying:undefined
-  //   }
-  //   ];
-
-
-  // Schemas:
-  // *Party:
-  // {
-  //  name: String,
-  //  description: String,
-  //  genre: String,
-  //  id: int (auto increments),
-  //  nowPlaying:song,
-  //  songs: [song],
-  //  guests: [Int(clientId)]
-  //
-  // }
-  //
-  // *song:
-  // {
-  //  title: String,
-  //  username: String,
-  //  atwork: String,
-  //  votes: Int
-  // }
-  //
-  // *client
-  // {
-  //   ws_id: int,
-  //   partyId: int,
-  //   songsVotedFor: [song]
-  // }
-  //
+  var clients = [];        // Array of client data
+  var parties = [];        // Array of parties
 
   app.get("/", function(req, res){
     fs.readFile(__dirname + '/../public/index.html',function (err, data){
@@ -72,6 +48,7 @@ module.exports = function(app, wss){
 
   // Get list of parties
   app.get('/parties', function(req, res){
+    console.log('GET "/"');
     var openParties = [];
     var party, _i, _len;
 
@@ -86,9 +63,9 @@ module.exports = function(app, wss){
 
   // Host a party
   app.post('/host', function(req, res){
-    console.dir(req.body);
+    console.log('POST "/host"');
     party = req.body;
-    party.id = partyId++;
+    party.id = parties.length;
     party.songs = [];
     party.clients = [];
     party.nowPlaying = undefined;
@@ -99,13 +76,14 @@ module.exports = function(app, wss){
 
   // Get details for a party
   app.get('/party/:id', function(req, res){
+    console.log('GET "/party/:id"');
     var partyId = parseInt(req.params.id);
     res.send(getParty(partyId));
   });
 
   // Post to this route if you've added a song
   app.post('/party/:id/addSongs', function(req, res){
-    console.dir(req.body);
+    console.log('POST "/party/:id/addSongs"');
     var song, _i, _len;
 
     var songs = req.body.songs;
@@ -128,7 +106,7 @@ module.exports = function(app, wss){
   });
 
   app.post('/party/:id/handleVote', function(req, res){
-    console.dir(req.body);
+    console.log('POST "/party/:id/handleVote');
     var partyId = parseInt(req.params.id);
     var party = getParty(partyId);
     var body = req.body;
@@ -137,7 +115,7 @@ module.exports = function(app, wss){
     for (_i = 0, _len = party.songs.length; _i < _len; _i++) {
       song = party.songs[_i];
       if(body.songId === song.id){
-        console.log('votes: ' + song.votes);
+        // console.log('votes: ' + song.votes);
         song.votes += parseInt(body.voteChange);
         party.songs.sort(compareSongs);
         updateClients(party);
@@ -150,6 +128,7 @@ module.exports = function(app, wss){
   });
 
   app.post('/party/:id/skipSong', function(req,res){
+    console.log('POST "/party/:id/skipSong');
     var partyId = parseInt(req.params.id);
     var party = getParty(partyId);
     playNextSong(party);
@@ -159,7 +138,7 @@ module.exports = function(app, wss){
 
   /************************** Helper functions... ********************/
   function getParty(partyId){
-    console.dir('GET party id: ' + partyId);
+    console.dir('Looking for party with id: ' + partyId);
     var party, _i, _len;
     for (_i = 0, _len = parties.length; _i < _len; _i++) {
       party = parties[_i];
@@ -175,7 +154,6 @@ module.exports = function(app, wss){
   // Update current song and upcomign songs
   function playNextSong(party){
     party.nowPlaying = party.songs.shift();
-
   }
 
   /************************** End of Helpers... ********************/
@@ -210,7 +188,7 @@ module.exports = function(app, wss){
         pong = true;
       }
       if(msg.joined !== void 0){
-        console.dir(parties);
+        // console.dir(parties);
         clients[id].partyId = msg.joined;
         parties[msg.joined].clients.push(id);
         inParty = true;
@@ -225,9 +203,8 @@ module.exports = function(app, wss){
         var index = parties[clients[id].partyId].clients.indexOf(id);
         if (index > -1) {
             parties[clients[id].partyId].clients.splice(index, 1);
-            console.dir(parties);
+            // console.dir(parties);
             if(parties[clients[id].partyId].clients.length === 0){
-              console.log('here');
               parties[clients[id].partyId] = undefined;
             }
         }
@@ -242,7 +219,6 @@ module.exports = function(app, wss){
     var client, _i, _len;
     for (_i = 0, _len = party.clients.length; _i < _len; _i++) {
       client = clients[party.clients[_i]];
-      // console.dir(client);
       client.ws.send(JSON.stringify({party:party}));
     }
   }
