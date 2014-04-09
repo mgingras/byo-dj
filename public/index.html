@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <!-- Meta -->
+    <meta name="description" content="As a host, play music from a playlist created collaboritavely by you and your guests.">
+    <meta name="keywords" content="dj,music,collaborative,party,playback,mp3,soundcloud,host,guest,martin,gingras,mgingras,carleton,computer,science,engineering,software">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="BYO-DJ">
+    <meta property="og:image" content="http://byodj.herokuapp.com/img/dj.png">
+    <meta property="og:url" content="http://byodj.herokuapp.com/">
+    <meta property="og:description" content="Tired of having to figure out how to get both the music you want while satisfying your guests? Don't want to have to be a DJ at your own party or have to designate that role to someone then listen to their shitty music? This application allows you and your guests to collaboratively create a playlist that you can all enjoy.">
+
+    <!-- For IE -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- For Everything else... -->
+    <link rel="icon" type="image/ico" href="/img/favicon.ico">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <title>BYO-DJ</title>
+    <!-- Path to Framework7 Library CSS-->
+    <link rel="stylesheet" href="css/framework7.css">
+    <!-- Path to your custom app styles-->
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Path font-awesome stylesheet-->
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+  </head>
+  <body>
+    <!-- Panels overlay-->
+    <div class="panel-overlay"></div>
+    <!-- Left panel with reveal effect-->
+    <div class="panel panel-left panel-reveal">
+      <div class="content-block">
+        <p>Left panel content goes here</p>
+      </div>
+    </div>
+    <!-- Right panel with cover effect-->
+    <div class="panel panel-right panel-cover" style='border-left:1px solid #c8c7cc;box-shadow:rgb(102, 102, 102) -1px 0px 1px -2px;'>
+      <div class="navbar">
+        <div class="navbar-inner navbar-on-left">
+          <div class="left"></div>
+          <div class="center sliding" style="left: 0px; transform: translate3d(-77px, 0px, 0px); -webkit-transform: translate3d(-77px, 0px, 0px);">Right Panel</div>
+          <div class="right"></div>
+        </div>
+        <div class="navbar-inner navbar-on-center">
+          <div class="left"></div>
+          <div class="sliding center" style="left: -71.5px; transform: translate3d(0px, 0px, 0px); -webkit-transform: translate3d(0px, 0px, 0px);">Add Songs</div>
+        </div>
+      </div>
+      <div class="list-block" style='margin:0px;'>
+        <ul>
+          <li>
+            <div class="item-content">
+              <div class="item-media"><i class="fa fa-search"></i></div>
+              <div class="item-inner">
+                <div class="item-input">
+                  <input id='songSearch' type="text" placeholder="Search"/>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="content-block" style='margin:0px;'>
+        <p style='margin-top:0px;'><small id='searchHelp'>Enter title or artist above to search for a song or add one of the suggested tracks below.</small></p>
+      </div>
+      <div id='searchResultType' class="content-block-title" style='margin-left:5px;margin-top:5px;'>Suggestions</div>
+      <div class="list-block media-list">
+        <ul id='searchResults'>
+        </ul>
+      </div>
+    </div>
+    <!-- Views-->
+    <div class="views">
+      <!-- Your main view, should have "view-main" class-->
+      <div class="view view-main">
+        <!-- Top Navbar-->
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="center sliding">BYO-DJ</div>
+          </div>
+        </div>
+        <div class="pages navbar-through toolbar-through">
+          <div data-page="index" class="page">
+            <!-- Scrollable page content-->
+            <div class="page-content">
+              <div class="content-block-title" style='margin-top:20px;'>Welcome to BYO-DJ<br><small><strong>Be your own DJ</strong></small></div>
+              <div class="content-block">
+                <div class="content-block-inner">
+                  <p>Tired of having to figure out how to get both the music you want while satisfying your guests? Don't want to have to be a DJ at your own party or have to designate that role to someone then listen to their shitty music? This application allows you and your guests to collaboratively create a playlist that you can all enjoy.</p>
+                  <!-- <p>Hey look! You already have two panels, here comes your <a href="#" class="open-panel">Left panel</a> and your favorite <a href="#" data-panel="right" class="open-panel">Right panel</a> is also here!</p> -->
+                </div>
+              </div>
+              <div class="content-block-title" style='margin-top:-10px;'>Are you a <strong>Host</strong> or <strong>Guest</strong>?</div>
+              <div class="list-block media-list inset" style='margin-bottom:0px;'>
+                <form id='partyType'>
+                  <ul>
+                    <li>
+                      <a href="#" id='goHostParty' class="item-link item-content">
+                        <div class="item-media"><img src="http://hhhhold.com/160/d/jpg?2" style='width:80px;'></div>
+                        <div class="item-inner">
+                          <div class="item-title-row">
+                            <div class="item-title">Host</div>
+                          </div>
+                          <div class="item-subtitle">You're having people over!</div>
+                          <div class="item-text"><small>You're having some people over and don't know what to do about the music situation.</small></div>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" id="goJoinParty" class="item-link item-content">
+                        <div class="item-media"><img src="http://hhhhold.com/160/d/jpg?2" width="80"></div>
+                        <div class="item-inner">
+                          <div class="item-title-row">
+                            <div class="item-title">Guest</div>
+                          </div>
+                          <div class="item-subtitle">You're somewhere and don't like the music!</div>
+                          <div class="item-text"><small>You're at someones party and they told you to come here and pick some music to play. You don't really know what's going on.</small></div>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Bottom Toolbar-->
+        <div class="toolbar" style='height:25px;'>
+          <div class="toolbar-inner">
+            <p style='font-size:75%;text-align:center;padding-left:50%;margin-left:-68px;'><small>By: <a href='#' id='me' >Martin Gingras</a></small></p>
+          <!-- <a href="#" class="link">Link 1</a><a href="#" class="link">Link 2</a> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Path to Framework7 Library JS-->
+    <script type="text/javascript" src="js/framework7.js"></script>
+    <!-- Path to JQuery Library JS-->
+    <script type="text/javascript" src="js/jquery-2.1.0.min.js"></script>
+    <!-- Soundcloud SDK -->
+    <script src="//connect.soundcloud.com/sdk.js"></script>
+    <!-- Path to your app js-->
+    <script type="text/javascript" src="js/byodj.min.js"></script>
+  </body>
+</html>
