@@ -8,6 +8,7 @@ var express = require('express')
 , http = require('http')
 , path = require('path')
 , compressor = require('node-minify')
+, newrelic = require('newrelic')
 , WebSocketServer = require('ws').Server;
 
 var app = express();
