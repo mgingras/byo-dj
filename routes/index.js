@@ -169,7 +169,10 @@ module.exports = function(app, wss){
     var pong = true;
     client.id = id;
     console.log("client connection: " + id);
-    ws.send(JSON.stringify({id:id}));
+    // Timeout to ack so that
+    setTimeout(function(){
+      ws.send(JSON.stringify({id:id}));
+    }, 1000);
 
     var interval = setInterval(function(){
       if(!pong){

@@ -751,6 +751,12 @@ $(document).ready(function(){
       ws.send(JSON.stringify({pong:true}));
     }
   }
+  ws.onerror = function(err){
+    console.dir(err);
+  }
+  ws.onclose = function(err){
+    console.dir(err);
+  }
 });
 
 
