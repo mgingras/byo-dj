@@ -171,17 +171,24 @@ module.exports = function(app, wss){
     console.log("client connection: " + id);
     // Timeout to ack so that
     setTimeout(function(){
-      ws.send(JSON.stringify({id:id}));
+      if(!(ws.readyState === ws.CLOSED || ws.readyState === ws.CLOSING)){
+        ws.send(JSON.stringify({id:id}));
+      }
     }, 1000);
 
     var interval = setInterval(function(){
       if(!pong){
-        clearInterval(interval);
-        ws.close();
-        return;
+        if(interval){
+          clearInterval(interval);
+        }
+        if(!(ws.readyState === ws.CLOSED || ws.readyState === ws.CLOSING)){
+          ws.close();
+        }
       }
-      ws.send(JSON.stringify({ping:true}));
-      pong = false;
+      else{
+        ws.send(JSON.stringify({ping:true}));
+        pong = false;
+      }
     }, 7500);
 
     ws.on('message', function(msg) {
