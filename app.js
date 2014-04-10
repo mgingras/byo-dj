@@ -14,14 +14,15 @@ var express = require('express')
 var app = express();
 
 new compressor.minify({
-  // type: 'uglifyjs',
-  type: 'no-compress',
+  type: 'uglifyjs',
+  // type: 'no-compress',
   fileIn: 'assets/scripts/js/byodj.js',
   fileOut: 'public/js/byodj.min.js',
   callback: function(err){
     if(err) console.log("minify: " + err);
   }
 });
+
 
 // all environments
 app.set('port', process.env.PORT || 3000);
