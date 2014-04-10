@@ -1,5 +1,5 @@
 // Initialize your app
-// (function () {
+(function () {
   var myApp = new Framework7();
   var $$ = myApp.$;
 
@@ -726,4 +726,4 @@
       console.dir(err);
     }
   });
-// })();
+})();

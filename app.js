@@ -23,7 +23,6 @@ new compressor.minify({
   }
 });
 
-
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
@@ -49,5 +48,3 @@ wss = new WebSocketServer({
 });
 
 require('./routes/index.js') (app, wss);
-
-
