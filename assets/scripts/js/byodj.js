@@ -51,7 +51,7 @@
                          '<div class="item-content">'+
                            '<div class="item-inner">'+
                              '<div class="item-title label">Fallback<br> Genre [<small>'+
-                             '<a href="#" onclick="wtf(\'fallback\');">wtf?</a>'+
+                             '<a href="#" class="wtf" name="fallback">wtf?</a>'+
                              '</small>]</div>'+
                              '<div class="item-input">'+
                                '<select id="fallBackGenre">'+
@@ -86,7 +86,7 @@
                          '<div class="item-content">'+
                            '<div class="item-inner">'+
                              '<div class="item-title label">Location [<small>'+
-                             '<a href="#" onclick="wtf(\'location\');">?</a>'+
+                             '<a href="#" class="wtf" name="location">?</a>'+
                              ']</small></div>'+
                              '<div class="item-input">'+
                                '<label class="label-switch">'+
@@ -128,7 +128,7 @@
             '<div data-page="joinParty" class="page">'+
               '<div class="page-content">'+
                 '<div class="content-block">'+
-                  '<p>You\'re here to party but are not sure how to get where you want to go. Below is a list of our most recent parties. Don\'t see it there? Try out our search or filter based on location. That doesn\'t work? You\'re pretty much <a href="#" onclick="wtf(\'sol\');">SOL</a>...</p>'+
+                  '<p>You\'re here to party but are not sure how to get where you want to go. Below is a list of our most recent parties. Don\'t see it there? Try out our search or filter based on location. That doesn\'t work? You\'re pretty much <a href="#" class="wtf" name="sol"">SOL</a>...</p>'+
                 '</div>'+
                 '<div class="content-block-title">Find Party</div>'+
                  '<div class="list-block inset">'+
@@ -195,7 +195,8 @@
   }
 
   // Alert box to give details about possibly confusing things
-  function wtf(what){
+  function wtf(){
+    var what = this.name;
       if(what === 'fallback'){
           myApp.alert("Your playlist will be pre-populated and refilled with popular songs from your fallback genre.", "BYO-Dj");
       }
@@ -699,6 +700,8 @@
     $$(document).tap('#playPause', playPause);
     $$(document).tap('#skip', skipSong);
     $$(document).tap('#songSearchPane', songSearch);
+    $$(document).tap('.wtf', wtf);
+    // $('.wtf').click(wtf);
     $$(document).tap('#me', function(){window.open('http://mgingras.ca', '_blank');});
     $$(document).tap('#home', function(){location.reload();});
     $$('#songSearch').on('keyup', songSearch);

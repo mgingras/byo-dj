@@ -14,8 +14,8 @@ var express = require('express')
 var app = express();
 
 new compressor.minify({
-  type: 'uglifyjs',
-  // type: 'no-compress',
+  // type: 'uglifyjs',
+  type: 'no-compress',
   fileIn: 'assets/scripts/js/byodj.js',
   fileOut: 'public/js/byodj.min.js',
   callback: function(err){
