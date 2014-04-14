@@ -706,7 +706,10 @@
     $$(document).tap('#home', function(){location.reload();});
     $$('#songSearch').on('keyup', songSearch);
 
-
+    // Hackey workaround for IE
+    if (!window.location.origin) {
+      window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ":" + window.location.port : "");
+    }
     //Websocket config
     var host = location.origin.replace(/^http/, 'ws');
     ws = new WebSocket(host);
