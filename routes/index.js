@@ -136,6 +136,14 @@ module.exports = function(app, wss){
     res.send({status:'success'});
   });
 
+  /***************************** Views *************************/
+  app.get('/host', function (req,res) {
+    res.render('host');
+  });
+
+
+  /************************* End of Views **********************/
+
   /************************** Helper functions... ********************/
   function getParty(partyId){
     console.dir('Looking for party with id: ' + partyId);

@@ -24,6 +24,13 @@
 
   // Generate page to post data about party you're hosting
   function hostParty(){
+    $.get('/host', function(data) {
+      // console.log(typeof(data));
+      // mainView.loadContent('wtf');
+      console.log('here');
+      return;
+
+    });
           mainView.loadContent(
               '<!-- Top Navbar-->' +
               '<div class="navbar">' +
@@ -112,6 +119,7 @@
                      '</div>'+
                    '</div>'
       );
+
       return;
   }
 

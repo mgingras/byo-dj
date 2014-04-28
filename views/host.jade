@@ -1,0 +1,74 @@
+// Top Navbar
+    .navbar
+      .navbar-inner
+        .left
+          a.back.link(href='index.html')
+            i.icon.icon-back-blue
+            span Back
+        .center.sliding You\re looking to Party!
+      .pages
+        .page(data-page='hostParty')
+          .page-content
+            .content-block-title Party Details
+            .list-block.inset
+              ul
+                li
+                  .item-content
+                    .item-inner
+                      #nameLabel.item-title.label Name
+                      .item-input
+                        input#partyName(type='text', placeholder='Party name')
+                li
+                  .item-content
+                    .item-inner
+                      .item-title.label
+                        | Fallback
+                        br
+                        | Genre [
+                        small
+                          a.wtf(href='#', name='fallback') wtf?
+                        | ]
+                      .item-input
+                        select#fallBackGenre
+                          option Select a Genre
+                          option Classical
+                          option Country
+                          option Dance
+                          option Deep House
+                          option Dubstep
+                          option Electro
+                          option Electronic
+                          option Hardcore Techno
+                          option Hip Hop
+                          option House
+                          option Indie Rock
+                          option Metal
+                          option Pop
+                          option Punk
+                          option R&B
+                          option Rap
+                          option Rock
+                          option Tech House
+                          option Techno
+                          option Trance
+                          option Trap
+                li
+                  .item-content
+                    .item-inner
+                      .item-title.label
+                        | Location [
+                        small
+                          a.wtf(href='#', name='location') ?
+                          | ]
+                      .item-input
+                        label.label-switch
+                          input#location(onchange='toggleLocation();', type='checkbox')
+                li.align-top
+                  .item-content
+                    .item-inner
+                      #descriptionLabel.item-title.label Description
+                      .item-input
+                        textarea#description
+              .row(style='margin-top: 5px;')
+                .col-40(style='float: right;')
+                  a#createParty.button.button-big.button-submit(href='#') Submit
