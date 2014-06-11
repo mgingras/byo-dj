@@ -177,7 +177,7 @@ module.exports = function(app, wss){
     var pong = true;
     client.id = id;
     console.log("client connection: " + id);
-    // Timeout to ack so that
+    // Timeout to ack so that ws doesnt close
     setTimeout(function(){
       if(!(ws.readyState === ws.CLOSED || ws.readyState === ws.CLOSING)){
         ws.send(JSON.stringify({id:id}));
