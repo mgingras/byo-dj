@@ -1,5 +1,11 @@
 // Initialize your app
 (function () {
+  $(function(){
+    $('body').on('change', '#locationToggle', toggleLocation);
+    $('body').on('click', '#refinePartyList', refinePartyList);
+
+  });
+
   var myApp = new Framework7();
   var $$ = myApp.$;
 
@@ -24,13 +30,6 @@
 
   // Generate page to post data about party you're hosting
   function hostParty(){
-    $.get('/host', function(data) {
-      // console.log(typeof(data));
-      // mainView.loadContent('wtf');
-      console.log('here');
-      return;
-
-    });
           mainView.loadContent(
               '<!-- Top Navbar-->' +
               '<div class="navbar">' +
@@ -97,7 +96,7 @@
                              ']</small></div>'+
                              '<div class="item-input">'+
                                '<label class="label-switch">'+
-                                 '<input id="location" onchange="toggleLocation();" type="checkbox"/>'+
+                                 '<input id="locationToggle" type="checkbox"/>'+
                                '</label>'+
                              '</div>'+
                            '</div>'+
@@ -152,7 +151,7 @@
                      '</li>'+
                    '</ul>'+
                    '<div class="row" style="margin-top:5px;">'+
-                     '<div class="col-40" style="float:right;"><a href="#" onclick="refinePartyList();"class="button button-big button-submit">Submit</a></div>'+
+                     '<div class="col-40" style="float:right;"><a href="#" id="refinePartyList" class="button button-big button-submit">Submit</a></div>'+
                    '</div>'+
                  '</div>'+
                 '<div class="content-block-title">Parties</div>'+
@@ -217,25 +216,62 @@
   }
 
   function refinePartyList(){
-    console.log('TODO');
+    var partyName = $('#partyName').val();
+    $.post('/findParty', {name: partyName}, function(res, status) {
+      console.log('refinePartyList[%s]', status);
+      console.dir(res);
+        var party, _i, _len;
+        var html = '';
+        for (_i = 0, _len = res.parties.length; _i < _len; _i++) {
+            party = res.parties[_i];
+            html += '<li id="/party/' + party.id + '" ><a href="#" class="item-link item-content party">'+
+              '<div class="item-media"><img src="http://hhhhold.com/160/d/jpg?'+ party.id +'" width="80"></div>'+
+              '<div class="item-inner">'+
+                '<div class="item-title-row">'+
+                  '<div class="item-title">'+ party.name + '</div>'+
+                '</div>'+
+                '<div class="item-subtitle">'+ party.genre +'</div>'+
+                '<div class="item-text">'+ party.description +'</div>'+
+              '</div></a></li>'
+        }
+        if(res.parties.length > 0){
+          $('#parties').html(html);
+        }else{
+          $('#parties').html('<li>'+
+                      '<div class="item-content">'+
+                        '<div class="item-media">'+
+                          '<img src="http://hhhhold.com/160/d/jpg?0" width="80">'+
+                        '</div>'+
+                        '<div class="item-inner">'+
+                          '<div class="item-title-row">'+
+                          '<div class="item-title">No parties matched your search... <i class="fa fa-frown-o"></i></div>'+
+                        '</div>'+
+                        '<div class="item-subtitle">Go host a party!</div>'+
+                      '</div>'+
+                    '</div>'+
+                  '</li>'
+                  );
+        }
+    });
   }
 
   // Get the location of where you are, used by the host party option to capture browser location.
   var partyLocation = undefined;
   function toggleLocation(){
-    $('#location').css('background', 'orange');
+    $('#locationToggle').css('background', 'orange');
     if(navigator.geolocation){
       navigator.geolocation.getCurrentPosition(function(position){
         partyLocation = {
           lat: position.coords.latitude,
           lon: position.coords.longitude
         }
-        $('#location').css('background', '#4cd964');
+        $('#locationToggle').css('background', '#4cd964');
+        console.dir(partyLocation);
         return;
       });
     }
     else{
-      $('#location').css('background', 'red');
+      $('#locationToggle').css('background', 'red');
       return;
     }
   }
@@ -627,7 +663,7 @@
 
   function loadNowPlaying(callback){
     SC.streamStopAll();
-    SC.stream('/tracks/' + myParty.nowPlaying.id, {autoLoad:true}, function(sound, error){
+    SC.stream('/tracks/' + myParty.nowPlaying.id, {autoLoad: true}, function(sound, error){
       if(error){
         console.log('streaming error: ' + error);
       }
@@ -644,6 +680,7 @@
       }
     });
   }
+
   function skipSong(){
     if(isHost){
       $.post('/party/'+myParty.id+'/skipSong', function(res, status){

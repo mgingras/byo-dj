@@ -29,7 +29,8 @@
 module.exports = function(app, wss){
   var http = require('http');
   var fs = require('fs');
-
+  var _ = require('lodash');
+  var Levenshtein = require('levenshtein');
 
   var ws_connections = []; // Array of ws_connections
   var clients = [];        // Array of client data
@@ -136,13 +137,20 @@ module.exports = function(app, wss){
     res.send({status:'success'});
   });
 
-  /***************************** Views *************************/
-  app.get('/host', function (req,res) {
-    res.render('host');
+  app.post('/findParty', function(req, res) {
+    var body = req.body;
+    console.dir(body);
+    console.dir(parties);
+    var matchedParties = _.filter(parties, function(party) {
+      party.d = (new Levenshtein('test', party.name)).distance;
+      return party.d < 8;
+    });
+    matchedParties.sort(function(a, b) { return a.d < b.d; });
+    console.dir(matchedParties);
+    res.send({parties: matchedParties});
   });
 
 
-  /************************* End of Views **********************/
 
   /************************** Helper functions... ********************/
   function getParty(partyId){
